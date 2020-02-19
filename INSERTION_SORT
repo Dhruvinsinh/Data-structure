@@ -1,0 +1,42 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<math.h>
+void insertinorder(int t[])
+{
+int key;
+int j,i;
+for(i=1;i<1000000;i++)
+{
+key=t[i];
+for(j=i-1;j>=0;j--)
+{
+if(t[j]>key)
+{
+t[j+1]=t[j];
+}
+else
+{
+break;
+}
+}
+t[j+1]=key;
+}
+}
+int main()
+{
+int n=1000000;
+int a[1000000];
+int i;
+for(i=0;i<n;i++)
+{
+a[i]=rand();
+insertinorder(a);
+}
+}
+/*
+output for n=1000
+real	0m0.548s
+user	0m0.528s
+sys	0m0.004s
+
+*/
