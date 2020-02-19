@@ -1,0 +1,95 @@
+#include<stdio.h>
+#include<stdlib.h>
+struct graph
+{
+	int val;
+	struct graph*ptr;
+};
+void initialize(struct graph nodelist[],int n)
+{
+
+	int i;
+	printf("enter nodes");
+	for(i=0;i<n;i++)
+	{
+	scanf("%d",&nodelist[i].val);
+	nodelist[i].ptr=NULL;
+	}
+}
+void display(struct graph nodelist[],int n){
+	for(int i=0;i<n;i++)
+	printf("%d",nodelist[i].val);	
+}
+void insertnode(struct graph *head,int v){
+		struct graph *newnode;
+		newnode=(struct graph*)malloc(sizeof(struct graph));
+		if(newnode==NULL)
+		{
+		printf("malloc");
+		exit(-1);		
+		}
+		newnode->val=v;
+		newnode->ptr=head->ptr;
+		head->ptr=newnode;
+		return;
+}
+int ispresent(struct graph nodelist[],int v,int n)
+{
+	int i;
+ 	for(i=0;i<n;i++)
+	{
+		if(v==nodelist[i].val)return 1;
+	}
+	return 0;
+}
+void cratelinks(struct graph nodelist[],int n){
+	int i,val;
+	for(i=0;i<n;i++)
+	{
+	printf("enter links for node%d (-1 to end)",nodelist[i].val);
+	while(1)
+	{
+	scanf("%d",&val);
+	if(val==-1)break;
+	if(!ispresent(nodelist,val,n))break;	
+	}
+	insertnode(&nodelist[i],val);	
+	}
+}
+int main()
+{
+int n;
+printf("enter number of elements");
+scanf("%d",&n);
+	struct graph*nodelist;
+	nodelist=(struct graph*)malloc(sizeof(struct graph)*n);
+	if(nodelist==NULL){
+	perror("eroor");
+	exit(-1);
+	}
+	initialize(nodelist,n);
+	display(nodelist,n);
+	cratelinks(nodelist,n);
+return 0;
+}
+/*
+output
+enter number of elements3
+enter nodes0
+1
+2
+012enter links for node0 (-1 to end)1
+2
+-1
+enter links for node1 (-1 to end)1
+2
+-1
+enter links for node2 (-1 to end)2
+0
+-1
+
+real	0m41.541s
+user	0m0.000s
+sys	0m0.001s
+
+*/
