@@ -1,0 +1,80 @@
+#include<stdio.h>
+#include<math.h>
+#include<stdlib.h>
+void merge(int t[],int low,int mid,int high)
+{
+int m[1000000];
+int i,j,k;
+i=low;
+j=mid+1;
+k=0;
+while((i<=mid)&&(j<=high))
+{
+if(t[i]<t[j])
+{
+m[k]=t[i];
+k++;
+i++;
+}
+else
+{
+m[k]=t[j];
+k++;
+j++;
+}
+}
+while(i<=mid)
+{
+m[k]=t[i];
+k++;
+i++;
+}
+while(j<=mid)
+{
+m[k]=t[j];
+k++;
+j++;
+}
+for(i=low,j=0;i<=high;i++,j++)
+{
+t[i]=m[j];
+}
+}
+void mergesort(int t[],int low,int high)
+{
+int mid;
+if(low<high)
+{
+mid=floor((low+high)/2);
+mergesort(t,low,mid);
+mergesort(t,mid+1,high);
+merge(t,low,mid,high);
+}
+}
+int main()
+{
+int a[1000000];
+int i;
+int low=0;
+int j=1000000;
+int temp=999999;
+int high=j-1;
+for(i=0;i<j;i++)
+{
+a[i]=rand();
+}
+mergesort(a,low,high);
+for(i=0;i<j;i++)
+{
+printf("%d\n",a[i]);
+}
+}
+/*
+output
+n=1000000
+real	0m17.378s
+user	0m0.724s
+sys	0m4.608s
+
+*/
+
