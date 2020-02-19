@@ -1,0 +1,327 @@
+#include<stdio.h>
+#include<stdlib.h>
+struct node
+{
+    int val;
+    struct node*ptr1;
+};
+struct node*insertatfront(struct node*head,int value)
+{
+    struct node*newnode1;
+    newnode1=(struct node*)malloc(sizeof(struct node));
+    if(newnode1==NULL)
+    {
+        printf("memory not allocated to new node so it's not crated");
+        return;
+    }
+        newnode1->val=value;
+        newnode1->ptr1=NULL;
+        head=newnode1;
+        return head;
+
+
+}
+struct node*insertinorder(struct node*head,int value)
+{
+    struct node*newnode1,*temp;
+    temp=head;
+    newnode1=(struct node*)malloc(sizeof(struct node));
+    if(newnode1==NULL)
+    {
+        printf("memory not allocated to new node so it's not crated");
+        return;
+    }
+        if(head==NULL || value<head->val)
+        {
+        newnode1->val=value;
+        newnode1->ptr1=head;
+        head=newnode1;
+        return head;
+        }
+        else
+        {
+            while((temp->ptr1!=NULL)&&((temp->ptr1)->val<value))
+            {
+                temp=temp->ptr1;
+            }
+            if(temp->ptr1==NULL)
+            {
+        newnode1->val=value;
+        newnode1->ptr1=NULL;
+        temp->ptr1=newnode1;
+        return head;
+            }
+            else{
+        newnode1->val=value;
+        newnode1->ptr1=temp->ptr1;
+        temp->ptr1=newnode1;
+        return head;
+                }
+        }
+
+
+}
+struct node*insertatend(struct node*head,int value)
+{
+    struct node*newnode2;
+    struct node*tempv;
+    tempv=head;
+    newnode2=(struct node*)malloc(sizeof(struct node));
+    if(newnode2==NULL)
+    {
+        printf("new node not created");
+        return;
+    }
+    if(head==NULL)
+    {
+newnode2->val=value;
+newnode2->ptr1=NULL;
+return newnode2;
+    }
+  else{
+    while(tempv->ptr1!=NULL)
+    {
+    tempv=tempv->ptr1;
+    }
+    newnode2->val=value;
+    newnode2->ptr1=NULL;
+    tempv->ptr1=newnode2;
+    return head;
+    }
+
+}
+struct node*display(struct node*head)
+{
+    struct node*temp;
+temp=head;
+    if(head==NULL)
+    {
+        printf("link is empty");
+        return;
+    }
+else{
+    while(temp!=NULL)
+   {
+    printf("%d\n",temp->val);
+    temp=temp->ptr1;
+    }
+}
+
+}
+struct node*insertbefore(struct node*head,int pre,int value)
+{
+   struct node*newnode1,*temp;
+     temp=head;
+    newnode1=(struct node*)malloc(sizeof(struct node));
+    if(newnode1==NULL)
+    {
+        printf("memory not allocated to new node so it's not crated");
+        return;
+    }
+    if(head->ptr1==NULL)
+    {
+        if(head->val==pre)
+        {
+        newnode1->val=value;
+        newnode1->ptr1=head;
+        head=newnode1;
+        return head;
+        }
+        else{
+            printf("value that u enter that not found for before operation");
+        }
+
+    }
+    else
+    {
+        while((temp->ptr1!=NULL)&&(temp->ptr1)->val==pre)
+        {
+            temp=temp->ptr1;
+        }
+        if(temp->ptr1==NULL)
+        {
+             printf("value that u enter that not found for before operation");
+        }
+        else
+        {
+        newnode1->val=value;
+        newnode1->ptr1=temp->ptr1;
+        temp->ptr1=newnode1;
+        return head;
+        }
+    }
+
+}
+struct node*insertafter(struct node*head,int pre,int value)
+{
+   struct node*newnode1,*temp;
+   temp=head;
+    newnode1=(struct node*)malloc(sizeof(struct node));
+    if(newnode1==NULL)
+    {
+        printf("memory not allocated to new node so it's not crated");
+        return;
+    }
+    if(head->ptr1==NULL)
+    {
+        if(head->val==pre)
+        {
+        newnode1->val=value;
+        newnode1->ptr1=NULL;
+        head->ptr1=newnode1;
+        return head;
+        }
+        else{
+            printf("value that u enter that not found for after operation");
+            exit(-1);
+        }
+
+    }
+    else
+    {
+        while((temp->ptr1!=NULL)&&(temp->val==pre))
+        {
+            temp=temp->ptr1;
+        }
+        if(temp->ptr1==NULL)
+        {
+             printf("value that u enter that not found for after operation");
+             exit(-1);
+        }
+        else
+        {
+        newnode1->val=value;
+        newnode1->ptr1=temp->ptr1;
+        temp->ptr1=newnode1;
+        return head;
+        }
+    }
+
+}
+struct node*deletefromfront(struct node*head)
+{
+    struct node*newnode1;
+   if(head==NULL)
+   {
+       printf("no node in list");
+       exit(-1);
+   }
+   if(head->ptr1==NULL)
+   {
+       newnode1=head;
+       head=NULL;
+       free(newnode1);
+       return head;
+   }
+   else{
+    newnode1=head;
+    head=head->ptr1;
+    free(newnode1);
+    return head;
+   }
+
+}
+struct node*deletefromend(struct node*head)
+{
+    struct node*newnode1,*temp;
+    temp=head;
+   if(head==NULL)
+   {
+       printf("no node in list");
+       exit(-1);
+   }
+   if(head->ptr1==NULL)
+   {
+       newnode1=head;
+       head=NULL;
+       free(newnode1);
+       return head;
+   }
+   else{
+        while((temp->ptr1)->ptr1!=NULL)
+        {
+         temp=temp->ptr1;
+        }
+    newnode1=(temp->ptr1)->ptr1;
+    temp->ptr1=NULL;
+    free(newnode1);
+    return head;
+   }
+
+}
+struct node*deletewithvaluen(struct node*head,int value)
+{
+   struct node*newnode1,*temp;
+   temp=head;
+   if(head==NULL)
+   {
+       printf("no node in list");
+       exit(-1);
+   }
+
+       if(head->val==value)
+       {
+           if(head->ptr1==NULL)
+           {
+       newnode1=head;
+       head=NULL;
+       free(newnode1);
+       return head;
+           }
+           else{
+       newnode1=head;
+       head=head->ptr1;
+       free(newnode1);
+       return head;
+           }
+
+       }
+
+
+   else{
+        while((temp->ptr1!=NULL)&&((temp->ptr1)->val!=value))
+        {
+         temp=temp->ptr1;
+        }
+    if(temp->ptr1==NULL)
+        {
+             printf("value that u enter that not found for delete operation");
+             exit(-1);
+        }
+        else
+        {
+        newnode1=temp->ptr1;
+        temp->ptr1=(temp->ptr1)->ptr1;
+       newnode1=NULL;
+        free(newnode1);
+        return head;
+        }
+   }
+
+}
+
+int main()
+{
+
+    struct node*h;
+    h=NULL;
+    h=insertatfront(h,20);
+    h=insertatend(h,30);
+    h=insertinorder(h,40);
+    h=insertinorder(h,28);
+    h=insertinorder(h,30);
+    h=insertbefore(h,20,80);
+    h=insertafter(h,20,50);
+    h=deletefromfront(h);
+    h=deletefromend(h);
+    h=deletewithvaluen(h,28);
+    display(h);
+    return 0;
+}
+/*
+output
+80
+50
+30
+30
+*/
