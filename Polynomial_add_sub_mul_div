@@ -1,0 +1,175 @@
+#include<stdio.h>
+#include<stdlib.h>
+struct node{
+int co;
+int px;
+int py;
+struct node*ptr;
+};
+struct node*insertpolynomial(struct node*head,int co1,int px1,int py1)
+{
+struct node*newnode;
+newnode=(struct node*)malloc(sizeof(struct node));
+if(newnode==NULL)
+{
+    printf("no node create for given polynomial");
+    exit(-1);
+}
+newnode->co=co1;
+newnode->px=px1;
+newnode->py=py1;
+newnode->ptr=NULL;
+head=newnode;
+return head;
+}
+void display(struct node*head)
+{
+    if(head==NULL)
+    {
+        printf("no equation exist");
+        exit(-1);
+    }
+printf("coefficient %d x ^ %d  y ^ %d \n",head->co,head->px,head->py);
+
+}
+struct node*addition(struct node*head1,struct node*head2)
+{
+if(((head1)->px==head2->px)&&(head1)->py==head2->py)
+{
+    head1->co=head1->co+head2->co;
+    return head1;
+}
+else
+{
+    printf("operation not possible between two polynomials because it has different power of x and y");
+    exit(-1);
+}
+}
+struct node*subtraction(struct node*head1,struct node*head2)
+{
+if(((head1)->px==head2->px)&&(head1)->py==head2->py)
+{
+if(((head1->px>=0)&&(head1->py>0))&&((head2->px>=0)&&(head2->py>=0)))
+{
+{
+    head1->co=head1->co-head2->co;
+    return head1;
+}
+}
+}
+else
+{
+    printf("operation not possible between two polynomials because it has different power of x and y");
+    exit(-1);
+}
+}
+struct node*division(struct node*head1,struct node*head2)
+{
+if(((head1->px>=0)&&(head1->py>0))&&((head2->px>=0)&&(head2->py>=0)))
+{
+{
+    head1->co=head1->co/head2->co;
+    head1->px=head1->px-head2->px;
+    head1->py=head1->py-head2->py;
+    return head1;
+}
+}
+else
+{
+    printf("operation not possible between two polynomials because it has no valid power of x or y");
+    exit(-1);
+}
+}
+struct node*multiplication(struct node*head1,struct node*head2)
+{
+if(((head1->px>=0)&&(head1->py>0))&&((head2->px>=0)&&(head2->py>=0)))
+{
+{
+    head1->co=head1->co*head2->co;
+    head1->px=head1->px+head2->px;
+    head1->py=head1->py+head2->py;
+    return head1;
+}
+}
+else
+{
+    printf("operation not possible between two polynomials because it has no valid power of x or y");
+    exit(-1);
+}
+}
+int main(){
+struct node*h;
+struct node*h1;
+int choice;
+h=h1=NULL;
+printf("enter  1=addition \t 2=subtraction \t 3=multiplication \t 4=division\n");
+do
+{
+printf("enter choice\n");
+scanf("%d",&choice);
+switch(choice)
+{
+case 1:
+    h=insertpolynomial(h,10,1,1);
+    display(h);
+    h1=insertpolynomial(h1,10,1,1);
+    display(h1);
+    h=addition(h,h1);
+    display(h);
+    break;
+case 2:
+     h=insertpolynomial(h,10,1,1);
+    display(h);
+    h1=insertpolynomial(h1,10,1,1);
+    display(h1);
+     h=subtraction(h,h1);
+    display(h);
+     break;
+case 3:
+    h=insertpolynomial(h,10,1,1);
+    display(h);
+    h1=insertpolynomial(h1,10,1,1);
+    display(h1);
+    h=multiplication(h,h1);
+    display(h);
+       break;
+case 4:
+    h=insertpolynomial(h,10,1,1);
+    display(h);
+    h1=insertpolynomial(h1,10,1,1);
+    display(h1);
+    h=division(h,h1);
+    display(h);
+    break;
+default:
+       exit(-1);
+       break;
+}
+}while((choice>=1)&&(choice<=4));
+return 0;
+}
+/*
+output
+enter  1=addition        2=subtraction   3=multiplication        4=division
+enter choice
+1
+coefficient 10 x ^ 1  y ^ 1
+coefficient 10 x ^ 1  y ^ 1
+coefficient 20 x ^ 1  y ^ 1
+enter choice
+2
+coefficient 10 x ^ 1  y ^ 1
+coefficient 10 x ^ 1  y ^ 1
+coefficient 0 x ^ 1  y ^ 1
+enter choice
+3
+coefficient 10 x ^ 1  y ^ 1
+coefficient 10 x ^ 1  y ^ 1
+coefficient 100 x ^ 2  y ^ 2
+enter choice
+4
+coefficient 10 x ^ 1  y ^ 1
+coefficient 10 x ^ 1  y ^ 1
+coefficient 1 x ^ 0  y ^ 0
+enter choice
+*/
