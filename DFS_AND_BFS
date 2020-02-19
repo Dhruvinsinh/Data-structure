@@ -1,0 +1,97 @@
+#include<stdio.h>
+int G[10][10],visited[10],visited2[10],n; int q[100];
+int f=0,r=-1;
+
+void bredthfirstsearch(int v,int n) {
+for(int i=0;i<n;i++){
+if(G[v][i] && !visited2[i])
+q[++r]=i;
+}
+if(f<=r) {
+visited[q[f]]=1;
+bredthfirstsearch(q[f++],n);
+}
+} 
+ 
+void DepthFirstSearch(int i)
+{
+int j;
+printf("\n%d",i);
+visited[i]=1;
+for(j=0;j<n;j++)
+{       
+if(!visited[j]&&G[i][j]==1)
+DepthFirstSearch(j);
+}
+} 
+ 
+int main()
+{
+int i,j;
+printf("Enter number of vertices:");
+scanf("%d",&n);
+printf("\nEnter adjecency matrix of the graph:");
+for(i=0;i<n;i++)
+{
+for(j=0;j<n;j++)
+{           
+scanf("%d",&G[i][j]);
+}
+}
+for(i=0;i<n;i++)
+{	
+visited[i]=0;
+visited2[i]=0;
+}
+printf("dfs is:\n");
+DepthFirstSearch(0);
+printf("\nbfs is:\n");
+bredthfirstsearch(0,n);
+for (i=0;i<n;i++)
+if(visited2[i]){
+printf("%d\n",i);
+}
+else
+{
+printf("bfs traversal is not possible");
+}
+return 0;
+}
+ 
+/*
+output
+Enter number of vertices:4
+
+Enter adjecency matrix of the graph:0
+1
+1
+0
+0
+0
+0
+1
+0
+0
+0
+1
+0
+1
+1
+0
+dfs is:
+
+0
+1
+3
+2
+bfs is:
+0
+1
+2
+3
+
+real	0m14.435s
+user	0m0.001s
+sys	0m0.000s
+
+*/
