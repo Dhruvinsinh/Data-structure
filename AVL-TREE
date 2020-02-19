@@ -1,0 +1,251 @@
+#include<stdio.h>
+#include<stdlib.h>
+struct avl
+{
+int val;
+int height;
+struct avl*left,*right;
+};
+
+int max(int a,int b){
+return a>b?a:b;
+}
+
+int getheight(struct avl*root){
+int hlt,hrt;
+if(root==NULL) return(-1);
+if((root->left==NULL)&&(root->right==NULL))return 0;
+hlt=getheight(root->left);
+hrt=getheight(root->right);
+int m=1+max(hlt,hrt);
+return m;
+}
+
+int getbalance(struct avl*root){
+return (getheight(root->left)-getheight(root->right));
+}
+
+struct avl*singlerotateright(struct avl*root){
+struct avl*cl;
+cl=root->left;
+root->left=cl->right;
+cl->right=root;
+root->height=1+max(getheight(root->left),getheight(root->right));
+cl->height=1+max(getheight(cl->left),getheight(cl->right));
+return cl;
+}
+
+struct avl*singlerotateleft(struct avl*root){
+struct avl*cl;
+cl=root->right;
+root->right=cl->left;
+cl->left=root;
+root->height=1+max(getheight(root->left),getheight(root->right));
+cl->height=1+max(getheight(cl->left),getheight(cl->right));
+return cl;
+}
+
+struct avl*doublerotateright(struct avl*root){
+struct avl*c;
+c=root->left;
+c=singlerotateleft(c);
+root=singlerotateright(root);
+return root;
+}
+
+struct avl*doublerotateleft(struct avl*root){
+struct avl*c;
+c=root->right;
+c=singlerotateright(c);
+root=singlerotateleft(root);
+return root;
+}
+
+struct avl*insertnode(struct avl*root,int v1){
+struct avl*newnode;
+newnode=(struct avl*)malloc(sizeof(struct avl));
+	if(newnode==NULL){
+		printf("malloc failed");
+		exit(-1);
+	} 
+
+	if(root==NULL)
+	{
+	newnode->val=v1;
+	newnode->left=NULL;
+	newnode->right=NULL;
+	newnode->height=0;
+	root=newnode;
+	return root;
+	}
+	if(v1<root->val){
+	root->left=insertnode(root->left,v1);
+		if(getbalance(root)==2){
+			if(v1<((root->left)->val))
+					{
+					root=singlerotateright(root);	
+					}
+			else{
+					root=doublerotateright(root);					
+					}	
+				}
+	
+	}
+	else{
+	root->right=insertnode(root->right,v1);
+		if(getbalance(root)==-2){
+			if(v1>((root->right)->val)){
+			root=singlerotateleft(root);
+			}	
+			else{
+			root=doublerotateleft(root);
+			}	
+		}
+	
+
+
+	}
+	root->height=1+max(getheight(root->left),getheight(root->right));
+}
+
+void traverse(struct avl*root){
+	if(root==NULL)return;
+	traverse(root->left);
+	printf("value of node:%d \t value of height %d \n",root->val,root->height);
+	traverse(root->right);
+}
+
+struct avl*findmin(struct avl*r)
+{
+struct avl*p;
+p=r;
+p=p->right;
+while(p->left!=NULL)
+{
+p=p->left;
+}
+return p;
+}
+
+struct avl*delete(struct avl*r,int v)
+{
+struct avl*ptr,*temp;
+temp=r;
+	if(r==NULL)
+	{
+	printf("there's not enough node to be delete");
+	exit(-1);
+	}
+	if(v<temp->val)
+	{
+	temp->left=delete(temp->left,v);
+	temp->height=1+max(getheight(temp->left),getheight(temp->right));
+		if(getbalance(temp)==2){
+			if(getbalance(temp->left)>=0){
+			temp=singlerotateright(temp);
+			}
+			else{
+			temp=doublerotateright(temp);
+			}
+	
+		}
+		if(getbalance(temp)==-2){
+			if(getbalance(temp->right)<=0){
+			temp=singlerotateleft(temp);
+			}
+			else{
+			temp=doublerotateleft(temp);
+			}			
+
+		}
+	}
+
+else if(v>temp->val)
+{
+temp->right=delete(temp->right,v);
+temp->height=1+max(getheight(temp->left),getheight(temp->right));
+
+	if(getbalance(temp)==2){
+			if(getbalance(temp->left)>=0){
+				temp=singlerotateright(temp);
+			}
+			else{
+				temp=doublerotateright(temp);
+			}
+
+	}
+	if(getbalance(temp)==-2){
+		if(getbalance(temp->right)<=0){
+			temp=singlerotateleft(temp);
+		}
+		else{
+			temp=doublerotateleft(temp);
+		}			
+
+	}
+}
+else
+{
+if((temp->left==NULL)&&(temp->right==NULL))
+{
+free(temp);
+return NULL;
+}
+if(temp->left==NULL)
+{
+temp=temp->right;
+free(r);
+return temp;
+}
+if(temp->right==NULL)
+{
+temp=temp->left;
+free(r);
+return temp;
+}
+ptr=findmin(r);
+temp->val=ptr->val;
+temp->right=delete(temp->right,ptr->val);
+}
+return temp;
+}
+
+
+
+int main()
+{
+struct avl*r;
+r=NULL;
+int v,v1;
+while(1){
+	scanf("%d",&v);
+	if(v==-1)break;
+	r=insertnode(r,v);
+}	
+printf("tree is:\n");
+traverse(r);	
+printf("enter node's value to be deleted\n");
+scanf("%d",&v1);
+r=delete(r,v1);
+traverse(r);
+}
+/*
+output
+4
+3
+2
+-1
+tree is:
+value of node:2 	 value of height 0 
+value of node:3 	 value of height 1 
+value of node:4 	 value of height 0 
+enter node's value to be deleted
+4
+value of node:2 	 value of height 0 
+value of node:3 	 value of height 1 
+
+real	0m50.234s
+user	0m0.001s
+sys	0m0.000s
+
+*/
