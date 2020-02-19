@@ -1,0 +1,41 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<math.h>
+void linearsearch(int temp[],int n)
+{
+int flag=0;
+for(int i=0;i<1000000;i++)
+{
+if(temp[i]==n)
+{
+printf("value found");
+flag=1;
+break;
+}
+}
+if(flag==0)
+{
+printf("value not found");
+}
+}
+int main()
+{
+int a[1000000];
+int b[1000000];
+int i;
+int low=0;
+int high=1000000-1;
+for(i=0;i<1000000;i++)
+{
+a[i]=rand();
+}
+linearsearch(a,99999);
+}
+//output
+/*
+value not found
+real	0m0.023s
+user	0m0.019s
+sys	0m0.000s
+
+*/
