@@ -1,0 +1,382 @@
+//doublycircularinsert,deleteanddisplayall
+#include<stdio.h>
+#include<stdlib.h>
+struct node
+{
+int value;
+struct node*lptr;
+struct node*rptr;
+};
+void display(struct node**l,struct node**r)
+{
+if(*l==NULL)
+{
+printf("linked list has no node");
+exit(-1);
+}
+struct node*newnode1=(*l);
+if(*l==*r)
+{
+printf("%d \t",newnode1->value);
+}
+else{
+    while(newnode1->rptr!=(*l))
+    {
+        printf("%d\n",newnode1->value);
+        newnode1=newnode1->rptr;
+    }
+    printf("%d\n",newnode1->value);
+}
+
+
+
+}
+void insertatfront(struct node**l,struct node**r,int val)
+{
+struct node*newnode;
+newnode=(struct node*)malloc(sizeof(struct node));
+if(newnode==NULL)
+{
+printf("memory not assign to new node");
+}
+if(*l==NULL)
+{
+newnode->value=val;
+(*l)=(*r)=newnode;
+(*r)->rptr=(*l)->lptr;
+(*l)->lptr=(*r)->rptr;
+}
+else
+{
+    newnode->value=val;
+    newnode->rptr=(*l);
+    newnode->lptr=(*l)->lptr;
+    (*l)->lptr=newnode;
+    (*l)=newnode;
+    (*r)->rptr=(*l);
+}
+}
+void deletefromfront(struct node**l,struct node**r)
+{
+struct node*newnode;
+if(*l==NULL)
+{
+    printf("no list is available");
+    exit(-1);
+}
+if((*l)==(*r))
+{
+    newnode=(*l);
+    (*l)=(*r)=NULL;
+    free(newnode);
+}
+else
+{
+    newnode=(*l);
+    (*l)=(*l)->rptr;
+    newnode->rptr=NULL;
+    newnode->lptr=NULL;
+    (*l)->lptr=(*r);
+    (*r)->rptr=(*l);
+    free(newnode);
+}
+}
+void deletefromend(struct node**l,struct node**r)
+{
+struct node*newnode;
+if(*l==NULL)
+{
+    printf("no list is available");
+    exit(-1);
+}
+if((*l)==(*r))
+{
+    newnode=(*l);
+    (*l)=(*r)=NULL;
+    free(newnode);
+}
+else
+{
+    newnode=(*r);
+    (*r)=(*r)->lptr;
+    (*r)=(*r)->rptr=(*l);
+    (*l)->lptr=(*r);
+    newnode->rptr=NULL;
+    newnode->lptr=NULL;
+    free(newnode);
+}
+}
+void deletefromvalue(struct node**l,struct node**r,int val)
+{
+struct node*newnode;
+if(*l==NULL)
+{
+    printf("no list is available");
+    exit(-1);
+}
+if((*l)==(*r))
+{
+    if((*l)->value==val)
+    {
+    newnode=(*l);
+    (*l)=(*r)=NULL;
+    free(newnode);
+    }
+    else{
+        printf("value not found");
+    }
+
+}
+else
+{
+    if((*l)->value==val)
+    {
+        newnode=(*l);
+        (*l)=(*l)->rptr;
+        (*r)->rptr=NULL;
+        newnode->lptr=NULL;
+        newnode->rptr=NULL;
+        (*l)->lptr=(*r);
+        (*r)->rptr=(*l);
+        free(newnode);
+    }
+    else if(((*r)->value==val))
+    {
+        newnode=(*r);
+        (*r)=(*r)->lptr;
+        (*r)->rptr=(*l);
+        (*l)->lptr=(*r);
+        newnode->lptr=NULL;
+        newnode->rptr=NULL;
+        free(newnode);
+    }
+    else{
+    struct node*temp;
+    temp=*l;
+    temp=temp->rptr;
+    while((temp->rptr!=(*l))&&(temp->value!=val))
+    {
+        temp=temp->rptr;
+    }
+    if((temp->rptr==(*l))&&(temp->value!=val))
+    {
+        printf("val. is not found");
+        exit(-1);
+    }
+        newnode=temp;
+        (temp->lptr)->rptr=temp->rptr;
+        (temp->rptr)->lptr=temp->lptr;
+        newnode->lptr=NULL;
+        newnode->rptr=NULL;
+        free(newnode);
+
+    }
+
+}
+}
+
+void insertatend(struct node**l,struct node**r,int val)
+{
+struct node*newnode;
+newnode=(struct node*)malloc(sizeof(struct node));
+if(newnode==NULL)
+{
+printf("memory not assign to new node");
+}
+if(*l==NULL)
+{
+newnode->value=val;
+(*l)=(*r)=newnode;
+(*r)->rptr=(*l)->lptr;
+(*l)->lptr=(*r)->rptr;
+}
+else
+{
+    newnode->value=val;
+    newnode->rptr=(*r)->rptr;
+    (*r)->rptr=newnode;
+    newnode->lptr=(*r);
+    (*r)=(*r)->rptr;
+    (*l)->lptr=(*r);
+
+}
+}
+void insertinorder(struct node**l,struct node**r,int val)
+{
+struct node*newnode,*temp;
+temp=(*l);
+newnode=(struct node*)malloc(sizeof(struct node));
+if(newnode==NULL)
+{
+printf("memory not assign to new node");
+}
+if(*l==NULL)
+{
+newnode->value=val;
+(*l)=(*r)=newnode;
+(*r)->rptr=(*l)->lptr;
+(*l)->lptr=(*r)->rptr;
+}
+if(val<=(*l)->value)
+{
+    newnode->value=val;
+    newnode->rptr=(*l);
+    newnode->lptr=(*l)->lptr;
+    (*l)->lptr=newnode;
+    (*l)=newnode;
+    (*r)->rptr=(*l);
+}
+else if(val>=(*r)->value)
+{
+    newnode->value=val;
+    newnode->rptr=(*r)->rptr;
+    (*r)->rptr=newnode;
+    newnode->lptr=(*r);
+    (*r)=newnode;
+    (*l)->lptr=(*r);
+}
+else
+{
+    while(temp->value<val)
+    {
+        temp=temp->rptr;
+    }
+    newnode->value=val;
+    newnode->lptr=temp->lptr;
+    newnode->rptr=temp;
+    (temp->lptr)->rptr=newnode;
+    (temp->lptr)=newnode;
+}
+}
+void insertbefore(struct node**l,struct node**r,int val,int pre)
+{
+struct node*newnode,*temp;
+temp=(*l);
+newnode=(struct node*)malloc(sizeof(struct node));
+if(newnode==NULL)
+{
+printf("memory not assign to new node");
+}
+if(*l==NULL)
+{
+printf("list is empty");
+exit(-1);
+}
+if((*l)->value==pre)
+{
+    newnode->value=val;
+    newnode->rptr=(*l);
+    newnode->lptr=(*l)->lptr;
+    (*l)->lptr=newnode;
+    (*l)=newnode;
+    (*r)->rptr=(*l);
+}
+else if((*r)->value==pre)
+{
+    newnode->value=val;
+    newnode->rptr=(*r);
+    newnode->lptr=(*r)->lptr;
+    ((*r)->lptr)->rptr=newnode;
+
+
+}
+else {
+    while((temp->rptr!=(*l))&&(temp->value!=pre))
+    {
+        temp=temp->rptr;
+    }
+    if((temp->rptr==(*l))&&(temp->value)!=pre)
+    {
+        printf("no. is not found");
+        exit(-1);
+    }
+    if((temp->value)==pre)
+    {
+    newnode->value=val;
+    newnode->rptr=temp;
+    newnode->lptr=temp->lptr;
+    (temp->lptr)->rptr=newnode;
+    (temp->lptr)=newnode;
+
+    }
+
+}
+}
+void insertafter(struct node**l,struct node**r,int val,int pre)
+{
+struct node*newnode,*temp;
+temp=(*l);
+newnode=(struct node*)malloc(sizeof(struct node));
+if(newnode==NULL)
+{
+printf("memory not assign to new node");
+}
+if(*l==NULL)
+{
+printf("list is empty");
+exit(-1);
+}
+if((*l)->value==pre)
+{
+    newnode->value=val;
+    newnode->rptr=(*l)->rptr;
+    (*l)->rptr=newnode;
+    newnode->lptr=(*l);
+    ((*l)->rptr)->lptr=newnode;
+     (*l)->lptr=(*r);
+}
+else if((*r)->value==pre)
+{
+    newnode->value=val;
+    newnode->rptr=(*r)->rptr;
+    (*r)->rptr=newnode;
+    newnode->lptr=(*r);
+    (*r)=(*r)->rptr;
+    (*l)->lptr=(*r);
+}
+else {
+    temp=temp->rptr;
+    while((temp->rptr!=(*l))&&(temp->value!=pre))
+    {
+        temp=temp->rptr;
+    }
+    if((temp->rptr==(*l))&&(temp->value)!=pre)
+    {
+        printf("no. is not found");
+        exit(-1);
+    }
+    if((temp->value)==pre)
+    {
+    newnode->value=val;
+    newnode->rptr=temp->rptr;
+    newnode->lptr=temp;
+    (temp->rptr)->lptr=newnode;
+    (temp->rptr)=newnode;
+
+    }
+
+}
+}
+int main()
+{
+struct node*l,*r;
+l=r=NULL;
+insertatfront(&l,&r,20);
+deletefromfront(&l,&r);
+insertatend(&l,&r,30);
+deletefromend(&l,&r);
+insertinorder(&l,&r,50);
+insertinorder(&l,&r,40);
+insertbefore(&l,&r,30,40);
+insertafter(&l,&r,30,40);
+deletefromvalue(&l,&r,30);
+display(&l,&r);
+return 0;
+}
+
+/*
+output
+40
+30
+50
+*/
