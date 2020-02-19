@@ -1,0 +1,115 @@
+#include<stdio.h>
+#include<stdlib.h>
+void heap(int h[],int c,int size,int v)
+{
+if(c>=size)
+{
+printf("no insertion possible");
+exit(-1);
+}
+int i=c;
+while((i>0)&&(v>h[(i-1)/2]))
+{
+h[i]=h[(i-1)/2];
+i=(i-1)/2;
+}
+h[i]=v;
+}
+void heaptraversal(int a[],int s)
+{
+for(int i=0;i<s;i++)
+{
+printf("%d\n",a[i]);
+}
+}
+void sorth(int t[],int i,int j)
+{
+int k=0;
+while(k<j)
+{
+if(i==0)	
+{
+	return;
+}
+int v=t[0];
+t[0]=t[i-1];
+t[i-1]=v;
+int p=0; 
+int temp=t[0];
+int c=1;
+i=i-1;
+	while(c<i)
+	{
+	if((c<i-1)&&(t[c]<t[c+1]))
+	{
+	c++;
+	}
+	if(t[p]>=t[c])
+	{
+	break;
+	}
+	int t1=t[p];
+	t[p]=t[c];
+	p=c;
+	t[p]=t1;
+	c=(2*c)+1;
+	}
+t[p]=temp;
+}
+k++;
+} 
+int main()
+{
+int root2[100];
+int n,j;
+
+char c;
+int i=-1;
+printf("do you want to perform heap tree operation");
+scanf("%c",&c);
+switch(c)
+{
+case 'y': 
+	
+	printf("enter no of nodes u want to insert");
+		
+	scanf("%d",&n);
+	int a[100];
+	printf("enter %d nodes",n);
+	for(i=0;i<n;i++)
+	{
+	scanf("%d",&j);
+	heap(root2,i,n,j);
+	}
+	break;
+case 'n':	printf("you choose no operation");
+	break;
+default:
+	printf("please enter choice between y or n");
+	break;
+}
+printf("heap tree without sorting\n");
+heaptraversal(root2,n);
+printf("heap tree after sorting\n");
+sorth(root2,i,n);
+heaptraversal(root2,n);
+return 0;
+}
+/*output
+do you want to perform heap tree operationy
+enter no of nodes u want to insert4
+enter 4 nodes1
+2
+3
+4
+heap tree without sorting
+4
+3
+2
+1
+heap tree after sorting
+1
+2
+3
+4
+*/
