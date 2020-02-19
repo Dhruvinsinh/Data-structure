@@ -1,0 +1,45 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<math.h>
+void binarysearch(int b[],int low,int high,int n)
+{
+int flag=0;
+int mid;
+int sum;
+sum=low+high;
+mid=floor(sum/2);
+if(b[mid]==n)
+{
+printf("value found");
+return;
+}
+if(n<b[mid])
+{
+binarysearch(b,low,mid-1,n);
+}
+else
+{
+binarysearch(b,mid+1,high,n);
+}
+}
+int main()
+{
+int b[1000000];
+int i;
+int low=0;
+int high=1000000-1;
+for(i=0;i<1000000;i++)
+{
+b[i]=i;
+}
+binarysearch(b,low,high,999999);
+}
+/*
+output
+value found
+real	0m0.008s
+user	0m0.006s
+sys	0m0.000s
+
+
+*/
