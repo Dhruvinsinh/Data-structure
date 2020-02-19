@@ -1,0 +1,212 @@
+//insert and delete with recursion
+#include<stdio.h>
+#include<stdlib.h>
+struct treenode
+{
+int val;
+struct treenode*left;
+struct treenode*right;
+};
+struct treenode*insertwithrecursion(struct treenode*r,int v)
+{
+struct treenode*newnode,*temp;
+temp=r;
+newnode=(struct treenode*)malloc(sizeof(struct treenode));
+if(newnode==NULL)
+{
+printf("malloc failed");
+exit(-1);
+}
+newnode->val=v;
+newnode->left=NULL;
+newnode->right=NULL;
+temp=r;
+if(r==NULL)
+{
+r=newnode;
+return r;
+}
+if(v<temp->val)
+{
+temp->left=insertwithrecursion(temp->left,v);
+}
+else
+{
+temp->right=insertwithrecursion(temp->right,v);
+}
+return r;
+}
+struct treenode*findmin(struct treenode*r)
+{
+struct treenode*p;
+p=r;
+p=p->right;
+while(p->left!=NULL)
+{
+p=p->left;
+}
+return p;
+}
+struct treenode*delete(struct treenode*r,int v)
+{
+struct treenode*ptr,*temp;
+temp=r;
+if(r==NULL)
+{
+printf("there's not enough node to be delete");
+exit(-1);
+}
+if(v<temp->val)
+{
+temp->left=delete(temp->left,v);
+}
+else if(v>temp->val)
+{
+temp->right=delete(temp->right,v);
+}
+else
+{
+if((temp->left==NULL)&&(temp->right==NULL))
+{
+free(temp);
+return NULL;
+}
+if(temp->left==NULL)
+{
+temp=temp->right;
+free(r);
+return temp;
+}
+if(temp->right==NULL)
+{
+temp=temp->left;
+free(r);
+return temp;
+}
+ptr=findmin(r);
+temp->val=ptr->val;
+temp->right=delete(temp->right,ptr->val);
+}
+return temp;
+}
+void pretraversal(struct treenode*r)
+{
+if(r==NULL)
+{
+return;
+}
+printf("%d\n",r->val);
+if(r->left!=NULL)
+{
+pretraversal(r->left);
+}
+if(r->right!=NULL)
+{
+pretraversal(r->right);
+}
+}
+void inordertraversal(struct treenode*r)
+{
+if(r==NULL)
+{
+return;
+}
+if(r->left!=NULL)
+{
+inordertraversal(r->left);
+}
+printf("%d\n",r->val);
+if(r->right!=NULL)
+{
+inordertraversal(r->right);
+}
+}
+void postordertraversal(struct treenode*r)
+{
+if(r==NULL)
+{
+return;
+}
+if(r->left!=NULL)
+{
+postordertraversal(r->left);
+}
+if(r->right!=NULL)
+{
+postordertraversal(r->right);
+}
+printf("%d\n",r->val);
+}
+struct treenode**queuecreate(int *r,int *f)
+{
+struct treenode**q;
+q=(struct treenode**)malloc(sizeof(struct treenode*)*100);
+*r=*f=0;
+return q;
+}
+void insertqueue(struct treenode**q,int *r,struct treenode*a)
+{
+q[*r]=a;
+(*r)++;
+}
+struct  treenode*deletequeue(struct treenode**q,int *f)
+{
+(*f)++;
+return q[(*f)-1];
+}
+void levelordertraversal(struct treenode*r)
+{
+struct treenode*t;
+t=r;
+struct treenode**q;
+int rear,front;
+q=queuecreate(&rear,&front);
+while(t!=NULL)
+{
+printf("%d\n",t->val);
+if(t->left!=NULL)
+{
+insertqueue(q,&rear,t->left);
+}
+if(t->right!=NULL)
+{
+insertqueue(q,&rear,t->right);
+}
+t=deletequeue(q,&front);
+}
+}
+int main()
+{
+struct treenode*root;
+root=NULL;
+root=insertwithrecursion(root,3);
+root=insertwithrecursion(root,10);
+root=insertwithrecursion(root,2);
+root=insertwithrecursion(root,9);
+root=insertwithrecursion(root,12);
+root=delete(root,10);
+pretraversal(root);
+inordertraversal(root);
+postordertraversal(root);
+levelordertraversal(root);
+return 0;
+}
+/*
+output
+3
+2
+12
+9
+2
+3
+9
+12
+2
+9
+12
+3
+3
+2
+12
+9
+*/
