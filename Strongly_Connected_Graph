@@ -1,0 +1,216 @@
+#include&lt;stdio.h&gt;
+#include&lt;stdlib.h&gt;
+int i[100][100],j=0;
+int a[100][2];
+int vss=0,vdd=0;
+void gettranspose()
+{
+int t;
+for(int i1=0;i1&lt;j;i1++)
+{
+t=i[i1][0];
+i[i1][0]=i[i1][1];
+i[i1][1]=t;
+}
+}
+void cleart(int n){
+for(int i1=0;i1&lt;n;i1++)
+{
+a[i1][1]=0;
+}
+
+}
+void displaynodesstate(int t)
+{
+printf(&quot;name\t&quot;);
+printf(&quot;state\n&quot;);
+for(int i1=0;i1&lt;t;i1++)
+{
+printf(&quot;%d\t&quot;,a[i1][0]);
+printf(&quot;%d\n&quot;,a[i1][1]);
+}
+}
+void links(int s,int d,int n)
+{
+int k;
+for(k=0;k&lt;n;k++)
+{
+if((s==a[k][0]))
+{
+vss=1;
+break;
+}
+}
+for(k=0;k&lt;n;k++)
+{
+if((d==a[k][0]))
+{
+vdd=1;
+
+break;
+}
+}
+if((vss==1)&amp;&amp;(vdd==1))
+{
+for(k=0;k&lt;2;k++)
+{
+if(k==0)
+{
+i[j][0]=s;
+}
+if(k==1)
+{
+i[j][1]=d;
+}
+}
+j++;
+}
+if((vss!=1)||(vdd!=1))
+{
+printf(&quot;please enter valid source or destination\n&quot;);
+exit(-1);
+}
+}
+void displayadjecency()
+{
+for(int t=0;t&lt;j;t++)
+
+{
+for(int k=0;k&lt;2;k++)
+{
+printf(&quot;%d\t&quot;,i[t][k]);
+}
+printf(&quot;\n&quot;);
+}
+}
+char check(int n)
+{
+int c22=1;
+for(int i=0;i&lt;n;i++)
+{
+if(a[i][1]==0)
+{
+c22=0;
+break;
+}
+}
+if(c22==0)
+{
+return &#39;n&#39;;
+}
+if(c22==1)
+{
+return &#39;y&#39;;
+}
+
+}
+void searchandlogic(int v,int n){
+for(int i1=0;i1&lt;n;i1++)
+{
+if(v==a[i1][0]){
+a[i1][1]=1;
+break;
+}
+}
+}
+char isstronglyconnected3(int n){
+int f1;
+int k,j,l;
+int re;
+int flag=0;
+k=0;
+a:
+if(k&lt;j)
+{
+f1=i[k][0];
+if(f1==i[k][1])
+{
+k++;
+goto a;
+}
+
+if(f1!=i[k][1])
+
+{
+searchandlogic(f1,n);
+k++;
+goto a;
+}
+}
+
+char s1=check(n);
+if((s1==&#39;y&#39;)){
+return &#39;y&#39;;
+}
+else
+{
+return &#39;n&#39;;
+}
+}
+
+void isstronglyconnected2(int n){
+int f1;
+int k,j,l;
+int re;
+int flag=0;
+k=0;
+a:
+if(k&lt;j)
+{
+f1=i[k][0];
+
+if(f1==i[k][1])
+{
+k++;
+goto a;
+}
+
+if(f1!=i[k][1])
+{
+searchandlogic(f1,n);
+k++;
+goto a;
+}
+}
+char s1=check(n);
+gettranspose();
+cleart(n);
+char s2=isstronglyconnected3(n);
+if((s1==&#39;y&#39;)&amp;&amp;(s2==&#39;y&#39;)){
+printf(&quot;graph is strongly connected&quot;);
+exit(-1);
+}
+else
+{
+printf(&quot;graph is not stronly connected&quot;);
+exit(-1);
+}
+
+}
+void creationarray(int t)
+{
+for(int i1=0;i1&lt;t;i1++)
+{
+a[i1][0]=i1;
+a[i1][1]=0;
+}
+}
+int main()
+{
+int n,v,u;
+printf(&quot;enter no of nodes\n&quot;);
+scanf(&quot;%d&quot;,&amp;n);
+creationarray(n);
+displaynodesstate(n);
+printf(&quot;enter links for nodes\n&quot;);
+while(1)
+{
+scanf(&quot;%d %d&quot;,&amp;v,&amp;u);
+if((v==-1)||(u==-1))break;
+links(v,u,n);
+}
+displayadjecency();
+isstronglyconnected2(n);
+return 0;
+}
+
