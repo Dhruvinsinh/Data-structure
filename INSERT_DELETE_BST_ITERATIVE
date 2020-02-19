@@ -1,0 +1,387 @@
+#include<stdio.h>
+#include<stdlib.h>
+struct treenode
+{
+int val;
+struct treenode*left;
+struct treenode*right;
+};
+struct treenode*insert(struct treenode*r,int v)
+{
+struct treenode*newnode,*temp;
+temp=r;
+newnode=(struct treenode*)malloc(sizeof(struct treenode));
+if(newnode==NULL)
+{
+printf("malloc failed");
+exit(-1);
+}
+newnode->val=v;
+newnode->left=NULL;
+newnode->right=NULL;
+
+if(r==NULL)
+{
+r=newnode;
+return r;
+}
+a:
+if(temp->val<=v)
+{
+if(temp->right==NULL)
+{
+temp->right=newnode;
+}
+else
+{
+temp=temp->right;
+goto a;
+}
+}
+else
+{
+if(temp->left==NULL)
+{
+temp->left=newnode;
+}
+else
+{
+temp=temp->left;
+goto a;
+}
+}
+return r;
+}
+void pretraversal(struct treenode*r)
+{
+if(r==NULL)
+{
+return;
+}
+printf("%d\n",r->val);
+if(r->left!=NULL)
+{
+pretraversal(r->left);
+}
+if(r->right!=NULL)
+{
+pretraversal(r->right);
+}
+}
+void inordertraversal(struct treenode*r)
+{
+if(r==NULL)
+{
+return;
+}
+if(r->left!=NULL)
+{
+inordertraversal(r->left);
+}
+printf("%d\n",r->val);
+if(r->right!=NULL)
+{
+inordertraversal(r->right);
+}
+}
+void postordertraversal(struct treenode*r)
+{
+if(r==NULL)
+{
+return;
+}
+if(r->left!=NULL)
+{
+postordertraversal(r->left);
+}
+if(r->right!=NULL)
+{
+postordertraversal(r->right);
+}
+printf("%d\n",r->val);
+}
+struct treenode*findmin(struct treenode*r)
+{
+struct treenode*p;
+p=r;
+p=p->right;
+while(p->left!=NULL)
+{
+p=p->left;
+}
+return p;
+}
+struct treenode*deletewithoutrec(struct treenode*r,int v)
+{
+struct treenode*ptr,*temp,*temp1,*temp2;
+temp=temp2=r;
+a:
+if(temp2==NULL)
+{
+printf("there's not enough node to be delete");
+exit(-1);
+}
+if(v<temp2->val)
+{
+temp1=temp2;
+temp2=temp2->left;
+goto a;
+}
+else if(v>temp2->val)
+{
+temp1=temp2;
+temp2=temp2->right;
+goto a;
+}
+else
+{
+if((temp2->left==NULL)&&(temp2->right==NULL))
+{
+if(temp1->right==temp2)
+{
+free(temp2);
+temp1->right=NULL;
+goto b;
+}
+if(temp1->left==temp2)
+{
+free(temp2);
+temp1->left=NULL;
+goto b;
+}
+}
+if(temp2->left==NULL)
+{
+temp1->left=temp2->right;
+free(temp2);
+goto b;
+}
+if(temp2->right==NULL)
+{
+temp1->right=temp2->left;
+free(temp2);
+goto b;
+}
+ptr=findmin(temp2);
+temp2->val=ptr->val;
+struct treenode*temp4,*temp5;
+temp4=temp2;
+temp4=temp4->right;
+if(temp4->left==NULL)
+{
+temp2->right=temp4->right;
+free(temp4);
+goto b;
+}
+while(((temp4->left))!=ptr)
+{
+temp4=temp4->left;
+}
+temp5=temp4->left;
+if(temp5->right!=NULL)
+{
+temp4->left=temp5->right;
+}
+else
+{
+temp4->left=NULL;
+}
+free(temp5);
+}
+b:
+return temp;
+}
+struct treenode*co(struct treenode*r)
+{
+struct treenode*n;
+n=(struct treenode*)malloc(sizeof(struct treenode));
+if(n==NULL)
+{
+printf("malloc failed");
+exit(-1);
+}
+if(r==NULL)
+{
+return NULL;
+}
+n->val=r->val;
+n->left=co(r->left);
+n->right=co(r->right);
+return n;
+}
+void heap(int h[],int c,int size,int v)
+{
+if(c>=size)
+{
+printf("no insertion possible");
+exit(-1);
+}
+int i=c;
+while((i>0)&&(v>h[(i-1)/2]))
+{
+h[i]=h[(i-1)/2];
+i=(i-1)/2;
+}
+h[i]=v;
+}
+void heaptraversal(int a[],int s)
+{
+for(int i=0;i<s;i++)
+{
+printf("%d\n",a[i]);
+}
+}
+int deleteh(int t[],int i,int n)
+{
+if(i==-1)
+{
+printf("no enough node");
+exit(-1);
+}
+int v=t[0];
+t[0]=t[i-1];
+int temp=t[0];
+int p=0; 
+int c=1;
+while(c<n)
+{
+if((c<n-1)&&(t[c]<t[c+1]))
+{
+c++;
+}
+if(t[p]>=t[c])
+{
+break;
+}
+int t1=t[p];
+t[p]=t[c];
+p=c;
+t[p]=t1;
+c=(2*c)+1;
+}
+t[p]=temp;
+n=n-1;
+i=i-1;
+printf("remaining node\n");
+heaptraversal(t,n);//heap traversal
+return v;
+}
+
+struct treenode**queuecreate(int *r,int *f)
+{
+struct treenode**q;
+q=(struct treenode**)malloc(sizeof(struct treenode*)*100);
+*r=*f=0;
+return q;
+}
+void insertqueue(struct treenode**q,int *r,struct treenode*a)
+{
+q[*r]=a;
+(*r)++;
+}
+struct  treenode*deletequeue(struct treenode**q,int *f)
+{
+(*f)++;
+return q[(*f)-1];
+}
+void levelordertraversal(struct treenode*r)
+{
+struct treenode*t;
+t=r;
+struct treenode**q;
+int rear,front;
+q=queuecreate(&rear,&front);
+while(t!=NULL)
+{
+printf("%d\n",t->val);
+if(t->left!=NULL)
+{
+insertqueue(q,&rear,t->left);
+}
+if(t->right!=NULL)
+{
+insertqueue(q,&rear,t->right);
+}
+t=deletequeue(q,&front);
+}
+}
+int main()
+{
+struct treenode*root,*root1;
+int root2[100];
+int n,j;
+root=root1=NULL;
+root=insert(root,3);//insert without recursion function
+root=insert(root,10);
+root=insert(root,2);
+root=insert(root,9);
+root=insert(root,12);
+root=deletewithoutrec(root,10);//delete without recursion function
+pretraversal(root);
+inordertraversal(root);
+postordertraversal(root);
+levelordertraversal(root);
+root1=co(root);
+pretraversal(root1);
+char c;
+int i=-1;
+printf("do you want to perform heap tree operation");
+scanf("%c",&c);
+switch(c)
+{
+case 'y': 
+	
+	printf("enter no of nodes u want to insert");
+		
+	scanf("%d",&n);
+	int a[100];
+	printf("enter %d nodes",n);
+	for(i=0;i<n;i++)
+	{
+	scanf("%d",&j);
+	heap(root2,i,n,j);//heap insertion
+	}
+	break;
+case 'n':	printf("you choose no operation");
+	break;
+default:
+	printf("please enter choice between y or n");
+	break;
+}
+int v;
+v=deleteh(root2,i,n);//heap delete
+printf("%d deleted\n",v);
+return 0;
+}
+/*
+output
+3
+2
+12
+9
+2
+3
+9
+12
+2
+9
+12
+3
+3
+2
+12
+9
+3
+2
+12
+9
+do you want to perform heap tree operationy
+enter no of nodes u want to insert3
+enter 3 nodes1
+2
+3
+remaining node
+2
+1
+3 deleted
+*/
